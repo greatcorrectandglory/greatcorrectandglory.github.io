@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://greatcorrectandglory.github.io/sitemap.xml
+Sitemap: https://crossthewall.org/sitemap.xml

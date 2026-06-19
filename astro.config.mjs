@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://greatcorrectandglory.github.io",
+  site: "https://crossthewall.org",
   integrations: [sitemap()],
   output: "static"
 });

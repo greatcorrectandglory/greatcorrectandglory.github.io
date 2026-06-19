@@ -79,10 +79,10 @@ for (const term of forbiddenTerms) {
 }
 
 const sitemap = read("public/sitemap.xml");
-assert.ok(sitemap.includes("https://greatcorrectandglory.github.io/"), "sitemap should include site URL");
+assert.ok(sitemap.includes("https://crossthewall.org/"), "sitemap should include site URL");
 
 const robots = read("public/robots.txt");
-assert.ok(robots.includes("Sitemap: https://greatcorrectandglory.github.io/sitemap.xml"), "robots should point to sitemap");
+assert.ok(robots.includes("Sitemap: https://crossthewall.org/sitemap.xml"), "robots should point to sitemap");
 
 const workflow = read(".github/workflows/deploy-pages.yml");
 assert.ok(workflow.includes("actions/deploy-pages"), "workflow should deploy to GitHub Pages");
