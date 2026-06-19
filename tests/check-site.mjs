@@ -20,6 +20,7 @@ for (const file of requiredFiles) {
 }
 
 const index = read("src/pages/index.astro");
+const css = read("src/styles/global.css");
 const descriptionMatch = index.match(/const description = "([^"]+)"/);
 assert.ok(descriptionMatch, "index should declare a reusable meta description");
 const descriptionLength = Array.from(descriptionMatch[1]).length;
@@ -29,6 +30,7 @@ assert.ok(
 );
 
 assert.equal((index.match(/<h1\b/g) ?? []).length, 1, "home page should have one H1");
+assert.ok(index.includes("mobile-proof-strip"), "home page should include mobile proof strip");
 
 const requiredSections = [
   "Hero 首屏",
@@ -86,5 +88,18 @@ assert.ok(robots.includes("Sitemap: https://crossthewall.org/test-platform/sitem
 
 const workflow = read(".github/workflows/deploy-pages.yml");
 assert.ok(workflow.includes("actions/deploy-pages"), "workflow should deploy to GitHub Pages");
+
+const mobileRules = [
+  "@media (max-width: 640px)",
+  ".mobile-proof-strip",
+  ".site-header nav",
+  ".hero-visual",
+  "scroll-snap-type",
+  "min-height: auto"
+];
+
+for (const rule of mobileRules) {
+  assert.ok(css.includes(rule), `mobile CSS should include: ${rule}`);
+}
 
 console.log("site checks passed");
