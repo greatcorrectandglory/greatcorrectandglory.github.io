@@ -1,316 +1,251 @@
 ---
-import "../styles/global.css";
+import ProductLayout from "../layouts/ProductLayout.astro";
 
-const title = "通用自动化测试平台 | 电子制造与研发验证测试软件";
-const description = "通用自动化测试平台面向电子制造与研发验证场景，提供产品配置包、插件化测试步骤、多工位执行、硬件资源绑定、测试结果追溯、MES与云平台对接等能力，帮助测试、硬件和软件团队减少重复开发，缩短新产品导入周期，并降低产线现场交付、维护、复盘与后续扩展复杂度。";
-const siteUrl = "https://crossthewall.org/test-platform/";
-const keywords = "通用测试平台,自动化测试平台,产线测试软件,电子产品测试,Python PyQt 测试平台,多工位测试,插件化测试系统,MES 对接,测试数据追溯,OpenHTF,OpenTAP";
+const title = "通用自动化测试平台 | 电子产品研发验证与产线测试软件";
+const description = "通用自动化测试平台面向电子产品研发验证与产线测试，统一管理产品配置、硬件资源、测试步骤、判定规则、结果追溯及MES/云端上报，基于配置包、插件化步骤和统一运行时减少重复开发，缩短新产品导入时间，并降低现场交付、维护和质量复盘复杂度，适合多工位测试与MES对接评估。";
 
 const painPoints = [
-  "新产品导入依赖复制旧项目，测试流程、设备参数和判定规则散落在代码里。",
-  "不同工位、夹具和仪器接入方式不统一，现场交付后维护成本高。",
-  "测试数据、日志、配置版本和异常现场难以关联，质量复盘耗时。",
-  "产线系统、MES、云平台和本地结果库各自拼接字段，接口长期难维护。"
+  "每个新产品都需要复制或修改一套测试程序，重复开发难以避免。",
+  "硬件连接、测试流程和判定标准散落在代码中，产品切换依赖软件工程师。",
+  "测试结果、异常日志、工位和序列号难以关联，现场复盘成本高。",
+  "烧录、功能测试、结果存储和 MES 上报缺少统一流程。",
+  "研发验证与产线交付使用不同工具，经验难以沉淀为平台能力。"
 ];
 
-const solutions = [
+const outcomes = [
   {
-    title: "产品配置包",
-    text: "把产品差异、工位资源、测试流程、治具参数和结果输出集中到可校验配置包，减少重复开发。"
+    title: "更快导入新产品",
+    text: "通过 Product Bundle 承载产品差异，优先调整配置包、资源绑定和测试计划，而不是复制整套程序。"
   },
   {
-    title: "插件化测试步骤",
-    text: "将可复用测试动作沉淀为步骤插件，产品只选择、组合和配置能力，避免一次性脚本扩散。"
+    title: "减少重复开发",
+    text: "把通用测试动作沉淀为 Step Plugin，把仪器与 DUT 接入沉淀为 Resource Plugin，项目只组合和配置能力。"
   },
   {
-    title: "统一资源绑定",
-    text: "用资源抽象连接 DUT、仪器、测试板、烧录器和仿真设备，使流程不直接依赖底层硬件细节。"
-  },
-  {
-    title: "结果追溯与集成",
-    text: "将运行记录、步骤明细、判定、日志和外部上报统一建模，支持 MES 对接、云平台对接和问题复盘。"
+    title: "降低现场交付复杂度",
+    text: "由 Runtime 统一执行、Validation 统一判定、Listener 统一记录和上报，便于预检、追溯和维护。"
   }
+];
+
+const interfaces = [
+  ["主测试界面", "展示产品选择、序列号录入、多工位运行状态与 PASS/FAIL 结果。"],
+  ["产品配置界面", "展示资源绑定、测试计划、治具参数和监听器配置的公开安全截图。"],
+  ["结果与日志界面", "展示步骤结果、异常提示、日志定位与本地追溯信息。"]
+];
+
+const flow = [
+  "选择产品 / 扫描序列号",
+  "加载 Product Bundle",
+  "初始化 DUT 与仪器资源",
+  "按 test_plan 执行步骤",
+  "采集测量值",
+  "执行 Validation 判定",
+  "保存日志、结果与附件",
+  "本地存储或外部系统上报"
+];
+
+const capabilities = [
+  ["产品配置包", "用 bench.yaml、test_plan.yaml、fixture_settings.yaml、listeners.yaml 组织产品差异。", "/test-platform/docs/#product-bundle"],
+  ["测试流程编排", "以测试计划表达步骤、资源绑定、输入参数和规则，不把流程写死在界面里。", "/test-platform/architecture/#runtime-flow"],
+  ["硬件资源管理", "统一管理 DUT、仪器、测试板、烧录器和仿真资源的初始化与释放。", "/test-platform/architecture/#resource-lifecycle"],
+  ["插件化扩展", "支持测试步骤插件、硬件资源插件和结果监听器插件。", "/test-platform/architecture/#extension-boundary"],
+  ["规则判定", "由 Validation 层执行测量值和期望规则的判定，输出可追溯结果。", "/test-platform/architecture/#validation"],
+  ["结果追溯与外部集成", "通过日志、SQLite、MQTT 或 Listener 对接外部系统，具体字段按项目评估。", "/test-platform/docs/#operations"]
 ];
 
 const roles = [
-  {
-    role: "测试员",
-    title: "稳定执行",
-    items: ["选择产品与工位", "扫码或录入 UID", "查看通过/失败与异常提示", "减少对配置细节的接触"]
-  },
-  {
-    role: "硬件工程师",
-    title: "快速接入",
-    items: ["绑定仪器和夹具资源", "验证通道与引脚映射", "使用仿真路径做联调", "定位资源占用和连线问题"]
-  },
-  {
-    role: "软件工程师",
-    title: "复用扩展",
-    items: ["开发步骤、资源和监听器插件", "维护稳定 API 与 DTO", "接入结果库、MES 和云平台", "用自动化测试守住回归"]
-  }
+  ["测试员", "选择产品、输入或扫描序列号、启动测试、查看 PASS/FAIL 和异常提示。"],
+  ["硬件工程师", "配置仪器、DUT、串口、USB、网络连接和治具参数，验证资源绑定。"],
+  ["软件工程师", "开发测试步骤插件、资源插件、监听器插件和外部系统集成。"]
 ];
 
-const scenarios = [
-  "研发验证：样机阶段快速组合测试流程，保留配置、日志和结果证据。",
-  "产线测试：多工位并行执行，统一硬件绑定和操作员入口。",
-  "新产品导入：从相近配置包克隆，调整资源、测试项和验收规则。",
-  "现场交付：以发布配置包、运行预检和结果上报降低部署复杂度。",
-  "质量追溯：按 UID、工位、批次、步骤和测量项回查测试数据。"
+const compatibility = [
+  ["操作系统", "Windows 支持完整 GUI 与后台运行；Linux 仅作为后台 Python 运行路径；macOS 当前不在范围内。"],
+  ["GUI 交付方式", "Windows + PyQt/PySide 桌面应用，面向本地工站使用。"],
+  ["后台运行方式", "Python 3.8+ 运行时，按产品配置包加载并执行测试计划。"],
+  ["产品配置格式", "YAML Product Bundle：bench、test_plan、fixture_settings、listeners。"],
+  ["支持的硬件通信类型", "串口、USB、仿真资源已有抽象；网络与专用设备根据具体硬件项目评估。"],
+  ["结果存储方式", "本地日志、SQLite 结果库和 Listener 输出；附件策略按项目评估。"],
+  ["外部集成方式", "MQTT、MES 或云端系统通过 Listener/API 对接，字段和认证方式按项目评估。"],
+  ["插件类型", "测试步骤插件、硬件资源插件、结果监听器插件。"]
 ];
 
-const features = [
-  "产品配置包与配置中心",
-  "测试计划、section 与步骤编排",
-  "插件化测试系统与测试项模板",
-  "多工位测试与资源绑定",
-  "DUT、仪器、测试板和仿真资源抽象",
-  "SQLite、本地导出、日志与事件追踪",
-  "MES 对接、云平台对接和监听器扩展",
-  "运行预检、配置校验和异常定位提示",
-  "面向 Python PyQt 测试平台的桌面交付路径",
-  "吸收 OpenHTF 测试语义与 OpenTAP 工程平台思想"
-];
-
-const faqs = [
-  {
-    q: "这是开源框架还是企业测试软件？",
-    a: "定位是企业级通用自动化测试平台。官网只介绍产品能力和适用场景，不公开私有仓库源码、客户资料、产品配置或协议细节。"
-  },
-  {
-    q: "它适合哪些团队？",
-    a: "适合电子产品测试、研发验证、制造测试、现场交付和质量追溯团队，尤其适合需要持续导入新产品和多工位测试的场景。"
-  },
-  {
-    q: "和单项目测试脚本有什么不同？",
-    a: "平台强调配置包、插件、资源契约和结果追溯。新产品优先通过配置和模板接入，复用能力沉淀在平台层，而不是复制脚本。"
-  },
-  {
-    q: "是否必须连接后端才能打开首页？",
-    a: "不需要。官网是静态页面，首屏和所有介绍内容都由 GitHub Pages 直接托管，加载时不依赖后端服务。"
-  }
+const docs = [
+  ["快速开始", "/test-platform/docs/#getting-started"],
+  ["系统要求", "/test-platform/docs/#getting-started"],
+  ["产品配置包说明", "/test-platform/docs/#product-bundle"],
+  ["测试运行生命周期", "/test-platform/architecture/#data-flow"],
+  ["硬件资源接入", "/test-platform/docs/#extension"],
+  ["测试步骤开发", "/test-platform/docs/#extension"],
+  ["结果监听与上报", "/test-platform/docs/#operations"],
+  ["常见问题", "/test-platform/docs/#faq"],
+  ["部署检查表", "/test-platform/docs/#operations"],
+  ["版本记录", "/test-platform/changelog/"]
 ];
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
-    <link rel="canonical" href={siteUrl} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={siteUrl} />
-    <meta property="og:site_name" content="通用自动化测试平台" />
-    <meta property="og:image" content={`${siteUrl}og-image.svg`} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="theme-color" content="#0f766e" />
-  </head>
-  <body>
-    <header class="site-header" aria-label="主导航">
-      <a class="brand" href={siteUrl} aria-label="通用自动化测试平台首页">
-        <span class="brand-mark" aria-hidden="true">T</span>
-        <span>通用自动化测试平台</span>
-      </a>
-      <nav>
-        <a href="#architecture">架构</a>
-        <a href="#roles">用户入口</a>
-        <a href="#deployment">部署集成</a>
-        <a href="#contact">申请演示</a>
-      </nav>
-    </header>
+<ProductLayout title={title} description={description} canonicalPath="/test-platform/">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">Engineering Preview · 电子产品测试平台</p>
+      <h1 id="hero-title">让电子产品测试从定制脚本，升级为可复用的平台能力</h1>
+      <p class="hero-lead">
+        面向研发验证与产线测试，统一管理产品配置、硬件资源、测试步骤、判定规则、结果追溯及 MES / 云端上报。
+      </p>
+      <div class="hero-actions">
+        <a class="primary-action" href="#interfaces">查看产品界面</a>
+        <a class="secondary-action" href="/test-platform/architecture/">查看技术架构</a>
+      </div>
+      <dl class="status-row" aria-label="当前状态">
+        <div><dt>当前版本</dt><dd>待确认</dd></div>
+        <div><dt>最后更新</dt><dd>2026-06-19</dd></div>
+        <div><dt>交付入口</dt><dd>Windows GUI</dd></div>
+      </dl>
+    </div>
+    <div class="hero-panel" aria-label="产品界面截图占位">
+      <div class="panel-title">
+        <span>Product Runtime</span>
+        <strong>截图待替换</strong>
+      </div>
+      <div class="runtime-grid">
+        <span class="pass">PASS</span>
+        <span class="pass">PASS</span>
+        <span class="warning">RETRY</span>
+        <span class="pass">PASS</span>
+      </div>
+      <p>此处仅为公开官网占位区。上线真实截图前需完成脱敏检查，不展示客户、产品型号、设备地址或协议字段。</p>
+    </div>
+  </section>
 
-    <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="section-kicker">Hero 首屏</p>
-          <h1 id="hero-title">面向电子制造与研发验证的通用自动化测试平台</h1>
-          <p class="hero-lead">
-            以产品配置包、插件化测试步骤、多工位执行、硬件资源绑定、测试数据追溯和
-            MES/云平台对接为核心，把分散项目经验沉淀成可复用的自动化测试平台能力。
-          </p>
-          <div class="mobile-proof-strip" aria-label="移动端核心能力摘要">
-            <span>配置包</span>
-            <span>步骤插件</span>
-            <span>多工位</span>
-            <span>结果追溯</span>
+  <section class="section" aria-labelledby="pain-title">
+    <p class="section-kicker">客户痛点</p>
+    <h2 id="pain-title">电子产品测试软件经常不是难在单次开发，而是难在持续复用和现场交付</h2>
+    <div class="grid five">
+      {painPoints.map((item) => <article class="card compact"><p>{item}</p></article>)}
+    </div>
+  </section>
+
+  <section class="section tint" aria-labelledby="outcome-title">
+    <p class="section-kicker">平台带来的结果</p>
+    <h2 id="outcome-title">用配置、插件和统一运行时，把项目经验沉淀为平台能力</h2>
+    <div class="grid three">
+      {outcomes.map((item) => (
+        <article class="card feature-card">
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" id="interfaces" aria-labelledby="interfaces-title">
+    <p class="section-kicker">实际产品界面</p>
+    <h2 id="interfaces-title">截图区预留给脱敏后的真实运行界面</h2>
+    <div class="screenshot-grid">
+      {interfaces.map(([name, text]) => (
+        <article class="screenshot-card">
+          <div class="screenshot-placeholder">
+            <span>{name}</span>
+            <small>待替换为脱敏真实截图</small>
           </div>
-          <div class="hero-actions">
-            <a class="primary-action" href="#contact">申请演示</a>
-            <a class="secondary-action" href="#solution">查看能力</a>
-          </div>
-          <dl class="hero-metrics" aria-label="核心价值">
-            <div>
-              <dt>更少重复开发</dt>
-              <dd>配置优先，插件复用</dd>
-            </div>
-            <div>
-              <dt>更快产品导入</dt>
-              <dd>模板化流程与资源绑定</dd>
-            </div>
-            <div>
-              <dt>更低交付复杂度</dt>
-              <dd>预检、日志、追溯闭环</dd>
-            </div>
-          </dl>
-        </div>
-        <div class="hero-visual" aria-label="多工位自动化测试平台示意图">
-          <div class="station-rack">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <div class="stations" aria-hidden="true">
-            <div class="station pass"><span>工位 A</span></div>
-            <div class="station pass"><span>工位 B</span></div>
-            <div class="station warn"><span>工位 C</span></div>
-          </div>
-          <div class="dashboard">
-            <div class="dash-header">
-              <span>Run Trace</span>
-              <strong>98.7%</strong>
-            </div>
-            <div class="trace-line"></div>
-            <div class="result-grid">
-              <span>PASS</span><span>PASS</span><span>RETRY</span><span>PASS</span>
-            </div>
-          </div>
-          <div class="integration-cloud">MES / Cloud</div>
-        </div>
-      </section>
+          <h3>{name}</h3>
+          <p>{text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
 
-      <section class="section" aria-labelledby="pain-title">
-        <p class="section-kicker">客户痛点</p>
-        <h2 id="pain-title">电子产品测试软件经常卡在重复建设和现场复杂度</h2>
-        <div class="grid four">
-          {painPoints.map((item) => <article class="card"><p>{item}</p></article>)}
+  <section class="section dark" aria-labelledby="flow-title">
+    <p class="section-kicker">测试执行流程</p>
+    <h2 id="flow-title">客户先理解平台如何工作，再深入查看架构细节</h2>
+    <ol class="flow-list">
+      {flow.map((item) => <li>{item}</li>)}
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="scenario-title">
+    <p class="section-kicker">典型应用场景</p>
+    <h2 id="scenario-title">从研发验证到产线测试，优先覆盖可确认的通用场景</h2>
+    <div class="scenario-preview">
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>研发阶段功能验证</strong><span>样机测试、参数验证、日志留存</span></a>
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>电子产品产线测试</strong><span>工站执行、资源绑定、结果追溯</span></a>
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>MES 或云端系统对接</strong><span>通过 Listener/API 按项目评估接入</span></a>
+    </div>
+  </section>
+
+  <section class="section tint" id="capabilities" aria-labelledby="capability-title">
+    <p class="section-kicker">核心能力清单</p>
+    <h2 id="capability-title">围绕通用测试平台、自动化测试平台和产线测试软件的六类能力</h2>
+    <div class="grid three">
+      {capabilities.map(([name, text, href]) => (
+        <article class="card capability-card">
+          <h3>{name}</h3>
+          <p>{text}</p>
+          <a href={href}>查看证据入口</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="roles-title">
+    <p class="section-kicker">三类用户入口</p>
+    <h2 id="roles-title">不同角色使用同一平台，但接触不同操作深度</h2>
+    <div class="grid three">
+      {roles.map(([role, text]) => (
+        <article class="card role-card">
+          <p class="role-label">{role}</p>
+          <p>{text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="compat-title">
+    <p class="section-kicker">兼容性与交付边界</p>
+    <h2 id="compat-title">公开页面只展示已确认范围，未确认能力按项目评估</h2>
+    <div class="matrix" role="table" aria-label="兼容性矩阵">
+      {compatibility.map(([name, value]) => (
+        <div class="matrix-row" role="row">
+          <strong role="cell">{name}</strong>
+          <span role="cell">{value}</span>
         </div>
-      </section>
+      ))}
+    </div>
+  </section>
 
-      <section class="section solution-band" id="solution" aria-labelledby="solution-title">
-        <p class="section-kicker">平台解决方案</p>
-        <h2 id="solution-title">把一次性测试项目沉淀为可配置、可扩展、可追溯的平台能力</h2>
-        <div class="grid four">
-          {solutions.map((item) => (
-            <article class="card feature-card">
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+  <section class="section tint" aria-labelledby="docs-title">
+    <p class="section-kicker">文档和技术资源</p>
+    <h2 id="docs-title">公开文档先给评估入口，细节内容经过脱敏后再逐步补充</h2>
+    <div class="doc-links">
+      {docs.map(([label, href]) => <a href={href}>{label}</a>)}
+    </div>
+  </section>
 
-      <section class="section" id="architecture" aria-labelledby="architecture-title">
-        <p class="section-kicker">核心架构图</p>
-        <h2 id="architecture-title">从产品配置到测试执行，再到结果追溯和外部系统集成</h2>
-        <div class="architecture" role="img" aria-label="产品配置包、配置中心、测试运行时、资源插件、结果追溯、MES和云平台的架构关系">
-          <div class="arch-column">
-            <strong>产品配置包</strong>
-            <span>测试计划</span>
-            <span>工位资源</span>
-            <span>治具参数</span>
-          </div>
-          <div class="arch-arrow" aria-hidden="true">→</div>
-          <div class="arch-column accent">
-            <strong>平台运行时</strong>
-            <span>步骤插件</span>
-            <span>资源绑定</span>
-            <span>多工位调度</span>
-          </div>
-          <div class="arch-arrow" aria-hidden="true">→</div>
-          <div class="arch-column">
-            <strong>数据与集成</strong>
-            <span>结果库</span>
-            <span>日志事件</span>
-            <span>MES / 云平台</span>
-          </div>
-        </div>
-      </section>
+  <section class="section faq" aria-labelledby="faq-title">
+    <p class="section-kicker">FAQ</p>
+    <h2 id="faq-title">常见问题</h2>
+    <details>
+      <summary>这是开源框架还是企业测试软件？</summary>
+      <p>这是面向企业内部研发验证与产线测试的通用自动化测试平台。官网只公开产品能力和评估信息，不公开私有源码或客户资料。</p>
+    </details>
+    <details>
+      <summary>是否承诺零代码或完全无开发接入？</summary>
+      <p>不做此类承诺。平台优先通过配置包复用能力；当硬件、步骤或外部系统存在差异时，仍需要插件或集成开发。</p>
+    </details>
+    <details>
+      <summary>是否已经内置所有 MES 或云平台协议？</summary>
+      <p>不这样表述。平台提供结果监听和外部集成边界，具体系统字段、认证方式和网络环境需要按项目确认。</p>
+    </details>
+  </section>
 
-      <section class="section" id="roles" aria-labelledby="roles-title">
-        <p class="section-kicker">三类用户入口</p>
-        <h2 id="roles-title">同一平台，面向不同角色提供不同操作深度</h2>
-        <div class="grid three">
-          {roles.map((entry) => (
-            <article class="card role-card">
-              <p class="role-label">{entry.role}</p>
-              <h3>{entry.title}</h3>
-              <ul>
-                {entry.items.map((item) => <li>{item}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section class="section split" aria-labelledby="scenarios-title">
-        <div>
-          <p class="section-kicker">典型应用场景</p>
-          <h2 id="scenarios-title">覆盖从研发样机到制造交付的测试闭环</h2>
-        </div>
-        <ul class="stack-list">
-          {scenarios.map((item) => <li>{item}</li>)}
-        </ul>
-      </section>
-
-      <section class="section" aria-labelledby="features-title">
-        <p class="section-kicker">核心功能清单</p>
-        <h2 id="features-title">围绕通用测试平台、产线测试软件和电子产品测试的能力清单</h2>
-        <div class="feature-list">
-          {features.map((item) => <span>{item}</span>)}
-        </div>
-      </section>
-
-      <section class="section deploy-band" id="deployment" aria-labelledby="deploy-title">
-        <p class="section-kicker">部署与集成方式</p>
-        <h2 id="deploy-title">静态官网之外，平台本体面向本地工站和企业系统集成</h2>
-        <div class="deploy-grid">
-          <article>
-            <h3>本地工站部署</h3>
-            <p>适配 Windows 工站运行环境，测试执行和硬件通信在现场完成，首屏操作聚焦生产运行。</p>
-          </article>
-          <article>
-            <h3>配置包交付</h3>
-            <p>通过发布配置包承载产品差异、测试流程、工位资源和输出策略，便于验收与回滚。</p>
-          </article>
-          <article>
-            <h3>企业系统集成</h3>
-            <p>通过监听器、稳定数据模型和 API 对接 MES、结果库、云平台和后续质量分析链路。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="faq-title">
-        <p class="section-kicker">FAQ</p>
-        <h2 id="faq-title">常见问题</h2>
-        <div class="faq-list">
-          {faqs.map((item) => (
-            <details>
-              <summary>{item.q}</summary>
-              <p>{item.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section class="section contact" id="contact" aria-labelledby="contact-title">
-        <p class="section-kicker">联系/演示申请</p>
-        <h2 id="contact-title">想评估新产品导入或多工位测试平台化？</h2>
-        <p>
-          可通过 GitHub 账号 greatcorrectandglory 发起联系，说明测试场景、工位规模、硬件资源类型、
-          结果上报方式和期望演示重点。请勿在公开 issue 中提交敏感客户、产品或协议信息。
-        </p>
-        <a class="primary-action" href="https://github.com/greatcorrectandglory" rel="noreferrer">访问 GitHub 主页</a>
-      </section>
-    </main>
-
-    <footer>
-      <span>© 2026 通用自动化测试平台</span>
-        <span>Public product site. No private source, customer data, product configuration, or protocol detail is published.</span>
-    </footer>
-  </body>
-</html>
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
+    <p class="section-kicker">联系/演示申请</p>
+    <h2 id="contact-title">想评估新产品导入、多工位执行或结果追溯是否适合平台化？</h2>
+    <p>请通过 GitHub 主页联系作者，说明测试场景、硬件资源类型、结果上报方式和希望查看的演示重点。请勿在公开渠道提交客户名称、真实产品型号、账号、密钥或协议字段。</p>
+    <div class="hero-actions center">
+      <a class="primary-action" href="https://github.com/greatcorrectandglory" rel="noreferrer">联系作者</a>
+      <a class="secondary-action" href="/test-platform/docs/">阅读文档</a>
+      <a class="secondary-action" href="/test-platform/architecture/">查看架构</a>
+    </div>
+  </section>
+</ProductLayout>

@@ -2,11 +2,20 @@
 
 这是 `greatcorrectandglory.github.io` 的 GitHub Pages 静态站点源码，用于公开介绍“通用自动化测试平台”。站点定位是产品介绍页，不是私有仓库的开发文档页。
 
+## 页面结构
+
+- `/test-platform/`：产品首页
+- `/test-platform/scenarios/`：应用场景
+- `/test-platform/architecture/`：技术架构
+- `/test-platform/docs/`：文档中心
+- `/test-platform/changelog/`：版本记录
+
 ## 内容边界
 
 - 不发布 private 仓库源码。
 - 不展示敏感客户、真实产品型号、协议细节、网关地址或公司内部信息。
 - 文案只使用可公开的产品能力抽象：产品配置包、插件化测试步骤、多工位执行、硬件资源绑定、结果追溯、MES/云平台对接。
+- 真实产品界面截图必须先放入 `public/assets/screenshots/` 并完成脱敏检查；没有通过检查前使用明确占位，不伪造演示截图。
 
 ## 本地开发
 

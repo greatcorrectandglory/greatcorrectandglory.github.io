@@ -1,0 +1,100 @@
+---
+import ProductLayout from "../../layouts/ProductLayout.astro";
+
+const title = "文档中心 | 通用自动化测试平台";
+const description = "文档中心按开始使用、产品配置、扩展开发、运行维护整理通用自动化测试平台资料，公开内容经过脱敏，不暴露私有源码和内部信息。";
+
+const groups = [
+  {
+    id: "getting-started",
+    title: "开始使用",
+    docs: [
+      ["平台概览", "说明平台定位、适用场景和当前交付边界。"],
+      ["系统要求", "Windows GUI、Python 运行环境和项目依赖检查。"],
+      ["快速部署", "面向本地工站的安装、配置和启动流程，公开前需脱敏。"],
+      ["第一次运行", "选择产品、输入标识、启动测试和查看结果。"]
+    ]
+  },
+  {
+    id: "product-bundle",
+    title: "产品配置",
+    docs: [
+      ["产品包结构", "Product Bundle 由资源、计划、治具参数和监听器策略组成。"],
+      ["bench.yaml", "描述仪器、DUT、测试板、仿真资源和连接参数。"],
+      ["test_plan.yaml", "描述测试步骤、输入参数、资源绑定和规则判定。"],
+      ["fixture_settings.yaml", "描述治具参数、变量和产品相关占位值。"],
+      ["listeners.yaml", "描述结果记录、上报和外部系统输出策略。"]
+    ]
+  },
+  {
+    id: "extension",
+    title: "扩展开发",
+    docs: [
+      ["测试步骤插件", "把可复用测试动作封装为 Step Plugin。"],
+      ["设备资源插件", "把仪器、DUT 或测试板接入统一 Resource 边界。"],
+      ["结果监听器", "把结果保存、导出或上报动作封装为 Listener。"],
+      ["硬件通信扩展", "串口、USB、仿真以外的专用通信方式按项目评估。"]
+    ]
+  },
+  {
+    id: "operations",
+    title: "运行与维护",
+    docs: [
+      ["日志与结果", "说明日志、步骤结果、本地结果库和追溯字段。"],
+      ["常见问题", "说明启动、资源占用、配置校验和结果上报问题。"],
+      ["部署检查表", "用于现场部署前确认配置、资源、上报和回滚策略。"],
+      ["版本升级", "记录配置兼容、插件边界和运行时变更。"],
+      ["故障排查", "从产品配置、资源初始化、步骤执行和 Listener 输出定位问题。"]
+    ]
+  }
+];
+---
+
+<ProductLayout title={title} description={description} canonicalPath="/test-platform/docs/">
+  <section class="page-hero">
+    <p class="eyebrow">文档中心</p>
+    <h1>面向评估和接入的公开文档目录</h1>
+    <p>当前页面先提供安全公开的文档结构。每篇正式文档发布前需要确认不包含客户、内部协议、账号、密钥、真实设备地址或私有仓库链接。</p>
+  </section>
+
+  <section class="section">
+    <div class="notice">
+      <strong>适用版本</strong>
+      <span>当前版本：待确认；页面更新时间：2026-06-19。未确认能力不写作稳定能力。</span>
+    </div>
+  </section>
+
+  <section class="section docs-layout">
+    {groups.map((group) => (
+      <article class="doc-group" id={group.id}>
+        <div>
+          <p class="section-kicker">{group.title}</p>
+          <h2>{group.title}</h2>
+          <p class="doc-meta">更新时间：2026-06-19 · 适用版本：待确认</p>
+        </div>
+        <div class="doc-card-grid">
+          {group.docs.map(([name, text]) => (
+            <div class="card doc-card">
+              <h3>{name}</h3>
+              <p>{text}</p>
+              <span>公开正文待脱敏补充</span>
+            </div>
+          ))}
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="section faq" id="faq" aria-labelledby="faq-title">
+    <p class="section-kicker">常见问题</p>
+    <h2 id="faq-title">公开文档发布规则</h2>
+    <details>
+      <summary>为什么文档没有直接链接到私有代码仓库？</summary>
+      <p>测试平台仓库是私有项目，官网只发布产品评估信息和脱敏后的接入说明，不公开源码、内部目录和客户配置。</p>
+    </details>
+    <details>
+      <summary>能否公开示例配置？</summary>
+      <p>可以，但必须使用匿名示例，移除真实产品型号、设备地址、协议字段、账号、密钥和内部系统路径。</p>
+    </details>
+  </section>
+</ProductLayout>

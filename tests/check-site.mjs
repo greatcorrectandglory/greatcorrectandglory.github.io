@@ -4,49 +4,94 @@ import assert from "node:assert/strict";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (relativePath) => fs.readFileSync(path.join(root, relativePath), "utf8");
+const exists = (relativePath) => fs.existsSync(path.join(root, relativePath));
+
+const pages = [
+  ["home", "src/pages/index.astro", "https://crossthewall.org/test-platform/"],
+  ["scenarios", "src/pages/scenarios/index.astro", "https://crossthewall.org/test-platform/scenarios/"],
+  ["architecture", "src/pages/architecture/index.astro", "https://crossthewall.org/test-platform/architecture/"],
+  ["docs", "src/pages/docs/index.astro", "https://crossthewall.org/test-platform/docs/"],
+  ["changelog", "src/pages/changelog/index.astro", "https://crossthewall.org/test-platform/changelog/"]
+];
 
 const requiredFiles = [
-  "src/pages/index.astro",
+  "src/layouts/ProductLayout.astro",
   "src/styles/global.css",
   "public/sitemap.xml",
   "public/robots.txt",
+  "public/og-image.svg",
+  "public/assets/screenshots/README.md",
   ".github/workflows/deploy-pages.yml",
   "README.md",
   "docs/content-strategy.md"
 ];
 
 for (const file of requiredFiles) {
-  assert.ok(fs.existsSync(path.join(root, file)), `${file} should exist`);
+  assert.ok(exists(file), `${file} should exist`);
 }
 
-const index = read("src/pages/index.astro");
-const css = read("src/styles/global.css");
-const descriptionMatch = index.match(/const description = "([^"]+)"/);
-assert.ok(descriptionMatch, "index should declare a reusable meta description");
-const descriptionLength = Array.from(descriptionMatch[1]).length;
+const allPublicSource = [
+  ...pages.map(([, file]) => read(file)),
+  read("src/layouts/ProductLayout.astro"),
+  read("README.md"),
+  read("docs/content-strategy.md"),
+  read("public/assets/screenshots/README.md")
+].join("\n");
+
+const forbiddenTerms = [
+  "ZSB101A",
+  "ZM24",
+  "apiyh.zlg.com",
+  "sf.zlg.com",
+  "VID/PID",
+  "S407IG"
+];
+
+for (const term of forbiddenTerms) {
+  assert.ok(!allPublicSource.includes(term), `public site should not expose sensitive term: ${term}`);
+}
+
+const titles = new Set();
+const descriptions = new Set();
+
+for (const [name, file] of pages) {
+  const source = read(file);
+  const titleMatch = source.match(/const title = "([^"]+)"/);
+  const descriptionMatch = source.match(/const description = "([^"]+)"/);
+  assert.ok(titleMatch, `${name} should declare title`);
+  assert.ok(descriptionMatch, `${name} should declare description`);
+  assert.ok(!titles.has(titleMatch[1]), `${name} title should be unique`);
+  assert.ok(!descriptions.has(descriptionMatch[1]), `${name} description should be unique`);
+  titles.add(titleMatch[1]);
+  descriptions.add(descriptionMatch[1]);
+  assert.equal((source.match(/<h1\b/g) ?? []).length, 1, `${name} should have one H1`);
+}
+
+const home = read("src/pages/index.astro");
+const homeDescription = home.match(/const description = "([^"]+)"/)[1];
+const homeDescriptionLength = Array.from(homeDescription).length;
 assert.ok(
-  descriptionLength >= 120 && descriptionLength <= 160,
-  `meta description should be 120-160 characters, got ${descriptionLength}`
+  homeDescriptionLength >= 120 && homeDescriptionLength <= 160,
+  `home meta description should be 120-160 characters, got ${homeDescriptionLength}`
 );
 
-assert.equal((index.match(/<h1\b/g) ?? []).length, 1, "home page should have one H1");
-assert.ok(index.includes("mobile-proof-strip"), "home page should include mobile proof strip");
-
-const requiredSections = [
-  "Hero 首屏",
+const requiredHomeSections = [
+  "Engineering Preview",
   "客户痛点",
-  "平台解决方案",
-  "核心架构图",
-  "三类用户入口",
+  "平台带来的结果",
+  "实际产品界面",
+  "测试执行流程",
   "典型应用场景",
-  "核心功能清单",
-  "部署与集成方式",
+  "核心能力清单",
+  "三类用户入口",
+  "兼容性与交付边界",
+  "文档和技术资源",
   "FAQ",
   "联系/演示申请"
 ];
 
-for (const section of requiredSections) {
-  assert.ok(index.includes(section), `home page should include section marker: ${section}`);
+for (const section of requiredHomeSections) {
+  assert.ok(home.includes(section), `home should include section marker: ${section}`);
 }
 
 const keywords = [
@@ -64,45 +109,60 @@ const keywords = [
 ];
 
 for (const keyword of keywords) {
-  assert.ok(index.includes(keyword), `home page should include keyword: ${keyword}`);
+  assert.ok(allPublicSource.includes(keyword), `site should include keyword: ${keyword}`);
 }
 
-const forbiddenTerms = [
-  "ZSB101A",
-  "ZM24",
-  "apiyh.zlg.com",
-  "sf.zlg.com",
-  "VID/PID",
-  "S407IG"
-];
+const architecture = read("src/pages/architecture/index.astro");
+assert.ok((architecture.match(/<svg\b/g) ?? []).length >= 2, "architecture page should include at least two SVG diagrams");
+for (const phrase of [
+  "Product Bundle",
+  "Runtime",
+  "Validation Engine",
+  "Step Plugins",
+  "Resource Plugins",
+  "Listener Plugins",
+  "当前支持与不支持范围"
+]) {
+  assert.ok(architecture.includes(phrase), `architecture page should include: ${phrase}`);
+}
 
-for (const term of forbiddenTerms) {
-  assert.ok(!index.includes(term), `public page should not expose sensitive term: ${term}`);
+const docs = read("src/pages/docs/index.astro");
+for (const phrase of ["开始使用", "产品配置", "扩展开发", "运行与维护", "更新时间：2026-06-19", "适用版本：待确认"]) {
+  assert.ok(docs.includes(phrase), `docs page should include: ${phrase}`);
+}
+
+const screenshotGuide = read("public/assets/screenshots/README.md");
+for (const phrase of ["desensitized", "customer names", "real device addresses", "tokens", "serial numbers"]) {
+  assert.ok(screenshotGuide.includes(phrase), `screenshot guide should include: ${phrase}`);
 }
 
 const sitemap = read("public/sitemap.xml");
-assert.ok(sitemap.includes("https://crossthewall.org/test-platform/"), "sitemap should include site URL");
+for (const [, , url] of pages) {
+  assert.ok(sitemap.includes(url), `sitemap should include ${url}`);
+}
 
 const robots = read("public/robots.txt");
 assert.ok(robots.includes("Sitemap: https://crossthewall.org/test-platform/sitemap.xml"), "robots should point to sitemap");
 
+const layout = read("src/layouts/ProductLayout.astro");
+for (const nav of ["产品能力", "应用场景", "技术架构", "文档", "版本记录", "联系"]) {
+  assert.ok(layout.includes(nav), `layout nav should include: ${nav}`);
+}
+
+const css = read("src/styles/global.css");
+for (const rule of [
+  "@media (max-width: 760px)",
+  "scroll-snap-type",
+  "grid-template-columns: 1fr",
+  ".screenshot-placeholder",
+  ".diagram",
+  ".matrix-row",
+  "border-radius: 8px"
+]) {
+  assert.ok(css.includes(rule), `CSS should include: ${rule}`);
+}
+
 const workflow = read(".github/workflows/deploy-pages.yml");
 assert.ok(workflow.includes("actions/deploy-pages"), "workflow should deploy to GitHub Pages");
-
-const mobileRules = [
-  "@media (max-width: 640px)",
-  ".mobile-proof-strip",
-  ".hero .section-kicker",
-  ".site-header nav",
-  ".hero-visual",
-  "display: none",
-  "scroll-snap-type",
-  "min-height: auto",
-  "grid-template-columns: 1fr"
-];
-
-for (const rule of mobileRules) {
-  assert.ok(css.includes(rule), `mobile CSS should include: ${rule}`);
-}
 
 console.log("site checks passed");

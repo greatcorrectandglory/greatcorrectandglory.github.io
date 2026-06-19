@@ -1,0 +1,77 @@
+---
+import ProductLayout from "../../layouts/ProductLayout.astro";
+
+const title = "应用场景 | 通用自动化测试平台";
+const description = "应用场景说明通用自动化测试平台在研发验证、产线测试、烧录配置、多产品复用、结果追溯和MES/云端对接中的使用边界与输出结果。";
+
+const scenarios = [
+  {
+    name: "研发阶段功能验证",
+    user: "研发工程师、测试开发工程师",
+    problem: "样机阶段测试项变化快，脚本和日志容易分散，后续很难复盘当时的配置和判定标准。",
+    platform: "用 Product Bundle 固化测试计划、资源绑定和判定规则，Runtime 统一执行并记录结果。",
+    output: "可回看配置、步骤结果、日志和异常原因，便于研发迭代。"
+  },
+  {
+    name: "电子产品产线测试",
+    user: "测试员、产线技术员、现场工程师",
+    problem: "多工位测试需要稳定操作入口，硬件资源和结果上报不能依赖人工记忆。",
+    platform: "由 GUI 提供产品选择、扫码/录入、启动测试和 PASS/FAIL 反馈，后台统一管理资源初始化与释放。",
+    output: "工位、序列号、测试步骤、判定结果和日志形成可追溯记录。"
+  },
+  {
+    name: "烧录、配置与功能测试组合流程",
+    user: "硬件工程师、软件工程师",
+    problem: "烧录、参数配置、通信检查和功能测试常常由不同工具完成，现场交付链路长。",
+    platform: "把可复用动作沉淀为 Step Plugin，并通过测试计划编排顺序、输入和资源绑定。",
+    output: "同一运行链路内完成执行、判定、记录和异常定位。"
+  },
+  {
+    name: "多产品共用测试平台",
+    user: "测试开发团队、交付团队",
+    problem: "相近产品复制项目后长期分叉，脚本、字段和设备接入方式越来越难统一。",
+    platform: "把产品差异放入配置包，平台内核保持稳定，插件能力跨产品复用。",
+    output: "新产品导入优先调整配置与模板，降低重复开发。"
+  },
+  {
+    name: "测试结果本地追溯",
+    user: "质量工程师、现场支持工程师",
+    problem: "异常发生后很难关联 UID、工位、步骤、测量值、日志和当时配置。",
+    platform: "运行时记录步骤结果、判定和日志，并通过本地结果库与导出能力支撑复盘。",
+    output: "按产品、工位、序列号或步骤回看结果，定位失败原因。"
+  },
+  {
+    name: "MES 或云端系统对接",
+    user: "制造 IT、软件工程师、质量系统负责人",
+    problem: "不同外部系统字段、认证和网络边界不一致，硬编码在项目里会长期难维护。",
+    platform: "通过 Listener/API 建立结果输出边界，具体字段和认证方式按项目确认。",
+    output: "测试结果可进入 MES、云平台或质量分析链路，未确认系统不做预置承诺。"
+  }
+];
+---
+
+<ProductLayout title={title} description={description} canonicalPath="/test-platform/scenarios/">
+  <section class="page-hero">
+    <p class="eyebrow">应用场景</p>
+    <h1>判断平台是否适合自己的测试现场</h1>
+    <p>这里不展示客户名称和真实产品型号，只用公开安全的场景说明平台如何介入、输出什么结果，以及哪些部分需要按项目确认。</p>
+  </section>
+
+  <section class="section">
+    <div class="scenario-list">
+      {scenarios.map((item) => (
+        <article class="scenario-card">
+          <div>
+            <p class="role-label">{item.user}</p>
+            <h2>{item.name}</h2>
+          </div>
+          <dl>
+            <div><dt>原有问题</dt><dd>{item.problem}</dd></div>
+            <div><dt>平台如何介入</dt><dd>{item.platform}</dd></div>
+            <div><dt>输出结果</dt><dd>{item.output}</dd></div>
+          </dl>
+        </article>
+      ))}
+    </div>
+  </section>
+</ProductLayout>

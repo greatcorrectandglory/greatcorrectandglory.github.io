@@ -1,0 +1,46 @@
+---
+import ProductLayout from "../../layouts/ProductLayout.astro";
+
+const title = "版本记录 | 通用自动化测试平台";
+const description = "版本记录说明通用自动化测试平台官网的公开页面更新、内容边界、架构说明和文档中心变化，平台本体版本号待项目资料确认。";
+---
+
+<ProductLayout title={title} description={description} canonicalPath="/test-platform/changelog/">
+  <section class="page-hero">
+    <p class="eyebrow">版本记录</p>
+    <h1>公开官网的更新记录与平台版本状态</h1>
+    <p>当前记录面向官网内容，不等同于私有测试平台仓库的代码发布说明。平台本体版本号仍需以项目资料确认。</p>
+  </section>
+
+  <section class="section">
+    <div class="timeline">
+      <article class="timeline-item">
+        <time datetime="2026-06-19">2026-06-19</time>
+        <h2>产品化升级上线</h2>
+        <ul>
+          <li>新增产品首页、应用场景、技术架构、文档中心和版本记录入口。</li>
+          <li>首页改为客户评估导向，补充执行流程、兼容性矩阵、三类用户入口和行动入口。</li>
+          <li>架构页新增客户运行流程图和开发者系统分层图。</li>
+          <li>文档中心改为公开安全目录，真实正文等待脱敏补充。</li>
+          <li>截图区使用明确占位，不伪造演示视频或客户案例。</li>
+        </ul>
+      </article>
+      <article class="timeline-item">
+        <time datetime="2026-06-19">2026-06-19</time>
+        <h2>移动端首屏优化</h2>
+        <ul>
+          <li>压缩移动端导航和 Hero 信息密度，优先展示定位、核心能力和行动入口。</li>
+          <li>移除移动首屏中过重的装饰化仪表盘，提升阅读效率。</li>
+        </ul>
+      </article>
+      <article class="timeline-item">
+        <time datetime="2026-06-19">2026-06-19</time>
+        <h2>官网部署到 crossthewall.org/test-platform/</h2>
+        <ul>
+          <li>Astro 静态站点部署到当前 VPS，与原博客共存。</li>
+          <li>GitHub Pages 仓库保留公开源码和部署 workflow。</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</ProductLayout>

@@ -1,0 +1,70 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+const baseUrl = "https://crossthewall.org";
+const basePath = "/test-platform";
+const canonicalUrl = `${baseUrl}${canonicalPath}`;
+const ogImage = `${baseUrl}${basePath}/og-image.svg`;
+
+const navItems = [
+  ["产品能力", `${basePath}/#capabilities`],
+  ["应用场景", `${basePath}/scenarios/`],
+  ["技术架构", `${basePath}/architecture/`],
+  ["文档", `${basePath}/docs/`],
+  ["版本记录", `${basePath}/changelog/`],
+  ["联系", `${basePath}/#contact`]
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="通用测试平台,自动化测试平台,产线测试软件,电子产品测试,Python PyQt 测试平台,多工位测试,插件化测试系统,MES 对接,测试数据追溯,OpenHTF,OpenTAP"
+    />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="通用自动化测试平台" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="theme-color" content="#0f766e" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href={`${basePath}/`} aria-label="通用自动化测试平台首页">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span>通用自动化测试平台</span>
+      </a>
+      <nav aria-label="页面导航">
+        {navItems.map(([label, href]) => <a href={href}>{label}</a>)}
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <span>© 2026 通用自动化测试平台</span>
+      <span>Public product site. No private source, customer data, product configuration, or protocol detail is published.</span>
+    </footer>
+  </body>
+</html>
