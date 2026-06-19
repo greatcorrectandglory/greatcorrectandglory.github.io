@@ -92,10 +92,13 @@ assert.ok(workflow.includes("actions/deploy-pages"), "workflow should deploy to 
 const mobileRules = [
   "@media (max-width: 640px)",
   ".mobile-proof-strip",
+  ".hero .section-kicker",
   ".site-header nav",
   ".hero-visual",
+  "display: none",
   "scroll-snap-type",
-  "min-height: auto"
+  "min-height: auto",
+  "grid-template-columns: 1fr"
 ];
 
 for (const rule of mobileRules) {
