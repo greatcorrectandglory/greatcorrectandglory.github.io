@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://crossthewall.org/sitemap.xml
+Sitemap: https://crossthewall.org/test-platform/sitemap.xml

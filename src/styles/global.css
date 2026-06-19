@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  --site-version: "2026-06-19";
   --ink: #102033;
   --muted: #536273;
   --line: #d9e4e8;

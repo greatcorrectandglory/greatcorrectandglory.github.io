@@ -32,13 +32,13 @@ npm run build
 gh repo create greatcorrectandglory/greatcorrectandglory.github.io --public --source=. --remote=origin --push
 ```
 
-然后在仓库 Settings -> Pages 中选择 GitHub Actions 作为 Pages source。首次 push 到 `main` 后，workflow 会部署到自定义域名：
+当前生产站点与个人博客共用 `crossthewall.org` 这台 VPS。官网建议部署到子路径：
 
 ```text
-https://crossthewall.org/
+https://crossthewall.org/test-platform/
 ```
 
-DNS 需要在域名解析商处指向 GitHub Pages：
+如需改回 GitHub Pages 根域部署，可在仓库 Settings -> Pages 中选择 GitHub Actions，并把 DNS 指向 GitHub Pages：
 
 ```text
 A     @    185.199.108.153
@@ -51,4 +51,4 @@ AAAA  @    2606:50c0:8002::153
 AAAA  @    2606:50c0:8003::153
 ```
 
-如果改用项目 Pages 地址，也可以保留同样源码结构，并在 `astro.config.mjs`、`public/sitemap.xml`、`public/robots.txt` 和 `public/CNAME` 中调整站点 URL。
+如果改用项目 Pages 地址，也可以保留同样源码结构，并在 `astro.config.mjs`、`public/sitemap.xml` 和 `public/robots.txt` 中调整站点 URL。
