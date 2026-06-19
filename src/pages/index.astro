@@ -1,0 +1,310 @@
+---
+import "../styles/global.css";
+
+const title = "通用自动化测试平台 | 电子制造与研发验证测试软件";
+const description = "通用自动化测试平台面向电子制造与研发验证场景，提供产品配置包、插件化测试步骤、多工位执行、硬件资源绑定、测试结果追溯、MES与云平台对接等能力，帮助测试、硬件和软件团队减少重复开发，缩短新产品导入周期，并降低产线现场交付、维护、复盘与后续扩展复杂度。";
+const siteUrl = "https://greatcorrectandglory.github.io/";
+const keywords = "通用测试平台,自动化测试平台,产线测试软件,电子产品测试,Python PyQt 测试平台,多工位测试,插件化测试系统,MES 对接,测试数据追溯,OpenHTF,OpenTAP";
+
+const painPoints = [
+  "新产品导入依赖复制旧项目，测试流程、设备参数和判定规则散落在代码里。",
+  "不同工位、夹具和仪器接入方式不统一，现场交付后维护成本高。",
+  "测试数据、日志、配置版本和异常现场难以关联，质量复盘耗时。",
+  "产线系统、MES、云平台和本地结果库各自拼接字段，接口长期难维护。"
+];
+
+const solutions = [
+  {
+    title: "产品配置包",
+    text: "把产品差异、工位资源、测试流程、治具参数和结果输出集中到可校验配置包，减少重复开发。"
+  },
+  {
+    title: "插件化测试步骤",
+    text: "将可复用测试动作沉淀为步骤插件，产品只选择、组合和配置能力，避免一次性脚本扩散。"
+  },
+  {
+    title: "统一资源绑定",
+    text: "用资源抽象连接 DUT、仪器、测试板、烧录器和仿真设备，使流程不直接依赖底层硬件细节。"
+  },
+  {
+    title: "结果追溯与集成",
+    text: "将运行记录、步骤明细、判定、日志和外部上报统一建模，支持 MES 对接、云平台对接和问题复盘。"
+  }
+];
+
+const roles = [
+  {
+    role: "测试员",
+    title: "稳定执行",
+    items: ["选择产品与工位", "扫码或录入 UID", "查看通过/失败与异常提示", "减少对配置细节的接触"]
+  },
+  {
+    role: "硬件工程师",
+    title: "快速接入",
+    items: ["绑定仪器和夹具资源", "验证通道与引脚映射", "使用仿真路径做联调", "定位资源占用和连线问题"]
+  },
+  {
+    role: "软件工程师",
+    title: "复用扩展",
+    items: ["开发步骤、资源和监听器插件", "维护稳定 API 与 DTO", "接入结果库、MES 和云平台", "用自动化测试守住回归"]
+  }
+];
+
+const scenarios = [
+  "研发验证：样机阶段快速组合测试流程，保留配置、日志和结果证据。",
+  "产线测试：多工位并行执行，统一硬件绑定和操作员入口。",
+  "新产品导入：从相近配置包克隆，调整资源、测试项和验收规则。",
+  "现场交付：以发布配置包、运行预检和结果上报降低部署复杂度。",
+  "质量追溯：按 UID、工位、批次、步骤和测量项回查测试数据。"
+];
+
+const features = [
+  "产品配置包与配置中心",
+  "测试计划、section 与步骤编排",
+  "插件化测试系统与测试项模板",
+  "多工位测试与资源绑定",
+  "DUT、仪器、测试板和仿真资源抽象",
+  "SQLite、本地导出、日志与事件追踪",
+  "MES 对接、云平台对接和监听器扩展",
+  "运行预检、配置校验和异常定位提示",
+  "面向 Python PyQt 测试平台的桌面交付路径",
+  "吸收 OpenHTF 测试语义与 OpenTAP 工程平台思想"
+];
+
+const faqs = [
+  {
+    q: "这是开源框架还是企业测试软件？",
+    a: "定位是企业级通用自动化测试平台。官网只介绍产品能力和适用场景，不公开私有仓库源码、客户资料、产品配置或协议细节。"
+  },
+  {
+    q: "它适合哪些团队？",
+    a: "适合电子产品测试、研发验证、制造测试、现场交付和质量追溯团队，尤其适合需要持续导入新产品和多工位测试的场景。"
+  },
+  {
+    q: "和单项目测试脚本有什么不同？",
+    a: "平台强调配置包、插件、资源契约和结果追溯。新产品优先通过配置和模板接入，复用能力沉淀在平台层，而不是复制脚本。"
+  },
+  {
+    q: "是否必须连接后端才能打开首页？",
+    a: "不需要。官网是静态页面，首屏和所有介绍内容都由 GitHub Pages 直接托管，加载时不依赖后端服务。"
+  }
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <link rel="canonical" href={siteUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content="通用自动化测试平台" />
+    <meta property="og:image" content={`${siteUrl}og-image.svg`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="theme-color" content="#0f766e" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="主导航">
+      <a class="brand" href={siteUrl} aria-label="通用自动化测试平台首页">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span>通用自动化测试平台</span>
+      </a>
+      <nav>
+        <a href="#architecture">架构</a>
+        <a href="#roles">用户入口</a>
+        <a href="#deployment">部署集成</a>
+        <a href="#contact">申请演示</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="section-kicker">Hero 首屏</p>
+          <h1 id="hero-title">面向电子制造与研发验证的通用自动化测试平台</h1>
+          <p class="hero-lead">
+            以产品配置包、插件化测试步骤、多工位执行、硬件资源绑定、测试数据追溯和
+            MES/云平台对接为核心，把分散项目经验沉淀成可复用的自动化测试平台能力。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#contact">申请演示</a>
+            <a class="secondary-action" href="#solution">查看能力</a>
+          </div>
+          <dl class="hero-metrics" aria-label="核心价值">
+            <div>
+              <dt>更少重复开发</dt>
+              <dd>配置优先，插件复用</dd>
+            </div>
+            <div>
+              <dt>更快产品导入</dt>
+              <dd>模板化流程与资源绑定</dd>
+            </div>
+            <div>
+              <dt>更低交付复杂度</dt>
+              <dd>预检、日志、追溯闭环</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="hero-visual" aria-label="多工位自动化测试平台示意图">
+          <div class="station-rack">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="stations" aria-hidden="true">
+            <div class="station pass"><span>工位 A</span></div>
+            <div class="station pass"><span>工位 B</span></div>
+            <div class="station warn"><span>工位 C</span></div>
+          </div>
+          <div class="dashboard">
+            <div class="dash-header">
+              <span>Run Trace</span>
+              <strong>98.7%</strong>
+            </div>
+            <div class="trace-line"></div>
+            <div class="result-grid">
+              <span>PASS</span><span>PASS</span><span>RETRY</span><span>PASS</span>
+            </div>
+          </div>
+          <div class="integration-cloud">MES / Cloud</div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="pain-title">
+        <p class="section-kicker">客户痛点</p>
+        <h2 id="pain-title">电子产品测试软件经常卡在重复建设和现场复杂度</h2>
+        <div class="grid four">
+          {painPoints.map((item) => <article class="card"><p>{item}</p></article>)}
+        </div>
+      </section>
+
+      <section class="section solution-band" id="solution" aria-labelledby="solution-title">
+        <p class="section-kicker">平台解决方案</p>
+        <h2 id="solution-title">把一次性测试项目沉淀为可配置、可扩展、可追溯的平台能力</h2>
+        <div class="grid four">
+          {solutions.map((item) => (
+            <article class="card feature-card">
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="section" id="architecture" aria-labelledby="architecture-title">
+        <p class="section-kicker">核心架构图</p>
+        <h2 id="architecture-title">从产品配置到测试执行，再到结果追溯和外部系统集成</h2>
+        <div class="architecture" role="img" aria-label="产品配置包、配置中心、测试运行时、资源插件、结果追溯、MES和云平台的架构关系">
+          <div class="arch-column">
+            <strong>产品配置包</strong>
+            <span>测试计划</span>
+            <span>工位资源</span>
+            <span>治具参数</span>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-column accent">
+            <strong>平台运行时</strong>
+            <span>步骤插件</span>
+            <span>资源绑定</span>
+            <span>多工位调度</span>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">→</div>
+          <div class="arch-column">
+            <strong>数据与集成</strong>
+            <span>结果库</span>
+            <span>日志事件</span>
+            <span>MES / 云平台</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="roles" aria-labelledby="roles-title">
+        <p class="section-kicker">三类用户入口</p>
+        <h2 id="roles-title">同一平台，面向不同角色提供不同操作深度</h2>
+        <div class="grid three">
+          {roles.map((entry) => (
+            <article class="card role-card">
+              <p class="role-label">{entry.role}</p>
+              <h3>{entry.title}</h3>
+              <ul>
+                {entry.items.map((item) => <li>{item}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="section split" aria-labelledby="scenarios-title">
+        <div>
+          <p class="section-kicker">典型应用场景</p>
+          <h2 id="scenarios-title">覆盖从研发样机到制造交付的测试闭环</h2>
+        </div>
+        <ul class="stack-list">
+          {scenarios.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="features-title">
+        <p class="section-kicker">核心功能清单</p>
+        <h2 id="features-title">围绕通用测试平台、产线测试软件和电子产品测试的能力清单</h2>
+        <div class="feature-list">
+          {features.map((item) => <span>{item}</span>)}
+        </div>
+      </section>
+
+      <section class="section deploy-band" id="deployment" aria-labelledby="deploy-title">
+        <p class="section-kicker">部署与集成方式</p>
+        <h2 id="deploy-title">静态官网之外，平台本体面向本地工站和企业系统集成</h2>
+        <div class="deploy-grid">
+          <article>
+            <h3>本地工站部署</h3>
+            <p>适配 Windows 工站运行环境，测试执行和硬件通信在现场完成，首屏操作聚焦生产运行。</p>
+          </article>
+          <article>
+            <h3>配置包交付</h3>
+            <p>通过发布配置包承载产品差异、测试流程、工位资源和输出策略，便于验收与回滚。</p>
+          </article>
+          <article>
+            <h3>企业系统集成</h3>
+            <p>通过监听器、稳定数据模型和 API 对接 MES、结果库、云平台和后续质量分析链路。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="faq-title">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">常见问题</h2>
+        <div class="faq-list">
+          {faqs.map((item) => (
+            <details>
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="section contact" id="contact" aria-labelledby="contact-title">
+        <p class="section-kicker">联系/演示申请</p>
+        <h2 id="contact-title">想评估新产品导入或多工位测试平台化？</h2>
+        <p>
+          可通过 GitHub 账号 greatcorrectandglory 发起联系，说明测试场景、工位规模、硬件资源类型、
+          结果上报方式和期望演示重点。请勿在公开 issue 中提交敏感客户、产品或协议信息。
+        </p>
+        <a class="primary-action" href="https://github.com/greatcorrectandglory" rel="noreferrer">访问 GitHub 主页</a>
+      </section>
+    </main>
+
+    <footer>
+      <span>© 2026 通用自动化测试平台</span>
+      <span>Public product site. No private source, customer data, product configuration, or protocol detail is published.</span>
+    </footer>
+  </body>
+</html>

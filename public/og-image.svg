@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">通用自动化测试平台</title>
+  <desc id="desc">电子制造与研发验证场景的多工位自动化测试平台示意图</desc>
+  <rect width="1200" height="630" fill="#102033"/>
+  <rect x="72" y="74" width="1056" height="482" rx="8" fill="#f8fbfb"/>
+  <rect x="110" y="360" width="980" height="78" rx="8" fill="#dce8ec"/>
+  <g fill="#ffffff" stroke="#91a9b1" stroke-width="3">
+    <rect x="160" y="238" width="170" height="170" rx="8"/>
+    <rect x="368" y="238" width="170" height="170" rx="8"/>
+    <rect x="576" y="238" width="170" height="170" rx="8"/>
+  </g>
+  <g fill="#0f766e">
+    <circle cx="196" cy="382" r="10"/>
+    <circle cx="404" cy="382" r="10"/>
+  </g>
+  <circle cx="612" cy="382" r="10" fill="#d97706"/>
+  <rect x="795" y="154" width="248" height="176" rx="8" fill="#17314a"/>
+  <rect x="825" y="190" width="188" height="18" rx="4" fill="#16a34a"/>
+  <rect x="825" y="228" width="144" height="18" rx="4" fill="#1d4ed8"/>
+  <rect x="825" y="266" width="166" height="18" rx="4" fill="#d97706"/>
+  <path d="M746 323 C795 323 794 256 842 256" fill="none" stroke="#0f766e" stroke-width="6"/>
+  <path d="M746 365 C855 365 850 486 980 486" fill="none" stroke="#1d4ed8" stroke-width="6"/>
+  <text x="112" y="145" fill="#102033" font-family="Arial, sans-serif" font-size="56" font-weight="800">通用自动化测试平台</text>
+  <text x="112" y="204" fill="#536273" font-family="Arial, sans-serif" font-size="30">电子制造 / 研发验证 / 多工位测试 / 结果追溯</text>
+</svg>
