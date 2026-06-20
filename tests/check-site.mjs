@@ -127,7 +127,7 @@ for (const phrase of [
 }
 
 const docs = read("src/pages/docs/index.astro");
-for (const phrase of ["开始使用", "产品配置", "扩展开发", "运行与维护", "更新时间：2026-06-19", "适用版本：待确认"]) {
+for (const phrase of ["开始使用", "产品配置", "扩展开发", "运行与维护", "更新时间：2026-06-20", "适用版本：待确认"]) {
   assert.ok(docs.includes(phrase), `docs page should include: ${phrase}`);
 }
 
@@ -157,7 +157,9 @@ for (const rule of [
   ".screenshot-placeholder",
   ".diagram",
   ".matrix-row",
-  "border-radius: 8px"
+  "border-radius: 24px",
+  "radial-gradient",
+  "backdrop-filter"
 ]) {
   assert.ok(css.includes(rule), `CSS should include: ${rule}`);
 }
