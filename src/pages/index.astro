@@ -203,41 +203,124 @@ listeners:
     </div>
   </section>
 
-  <section class="section" aria-labelledby="pain-title">
-    <p class="section-kicker">客户痛点</p>
-    <h2 id="pain-title">电子产品测试软件经常不是难在单次开发，而是难在持续复用和现场交付</h2>
-    <div class="grid five">
-      {painPoints.map((item) => <article class="card compact"><p>{item}</p></article>)}
+  <section class="section deck-section" aria-labelledby="workflow-title">
+    <div class="section-head">
+      <div>
+        <p class="section-kicker">用户 30 秒理解</p>
+        <h2 id="workflow-title">一次测试如何完成</h2>
+      </div>
+      <p>页面先让客户理解从“选择产品”到“结果追溯”的闭环，再进入架构、配置和扩展细节。</p>
+    </div>
+    <ol class="deck-flow">
+      {flow.slice(0, 6).map((item) => <li><strong>{item.split(" / ")[0]}</strong><span>{item.includes(" / ") ? item.split(" / ")[1] : "平台自动处理"}</span></li>)}
+    </ol>
+    <div class="grid three intro-cards">
+      <article class="card"><span class="icon">1</span><h3>定义产品</h3><p>工程师维护资源、步骤、参数和判定规则，形成可复用的产品配置包。</p></article>
+      <article class="card"><span class="icon">2</span><h3>执行测试</h3><p>操作员选择产品、扫码并启动测试，Runtime 按配置执行完整流程。</p></article>
+      <article class="card"><span class="icon">3</span><h3>记录结果</h3><p>步骤结果、测量值、日志和最终判定进入本地记录或监听器输出。</p></article>
     </div>
   </section>
 
-  <section class="section tint" aria-labelledby="outcome-title">
-    <p class="section-kicker">平台带来的结果</p>
-    <h2 id="outcome-title">用配置、插件和统一运行时，把项目经验沉淀为平台能力</h2>
-    <div class="grid three">
-      {outcomes.map((item) => (
-        <article class="card feature-card">
-          <h3>{item.title}</h3>
-          <p>{item.text}</p>
-        </article>
-      ))}
+  <section class="section tint operator-section" aria-labelledby="operator-title">
+    <div class="section-head">
+      <div>
+        <p class="section-kicker">Operator Mode</p>
+        <h2 id="operator-title">操作员视角：少判断，直接测试</h2>
+      </div>
+      <p>产线界面只暴露必要动作和状态，不让操作员处理复杂配置。</p>
+    </div>
+    <div class="grid two">
+      <article class="card runtime-card">
+        <div class="statusline"><h3>当前运行任务</h3><span class="badge blue">READY</span></div>
+        <div class="inputbox">SN-DEMO-0422</div>
+        <div class="task-grid">
+          <div><small>产品</small><strong>Demo FCT</strong></div>
+          <div><small>工位</small><strong>Station 01</strong></div>
+          <div><small>Bundle</small><strong>Preview</strong></div>
+          <div><small>状态</small><strong>READY</strong></div>
+        </div>
+        <button class="demo-run-button inline" type="button" data-demo-run-secondary>演示一次测试</button>
+      </article>
+      <article class="card running-card">
+        <div class="statusline"><h3>执行状态</h3><span class="badge green">TRACEABLE</span></div>
+        <div class="progress large"><div></div></div>
+        <div class="steps">
+          <div class="step"><b>初始化测试环境</b><span class="ok">OK</span></div>
+          <div class="step"><b>连接 DUT</b><span class="ok">OK</span></div>
+          <div class="step"><b>读取固件版本</b><span class="ok">OK</span></div>
+          <div class="step"><b>静态电流检查</b><span class="run">RUNNING</span></div>
+          <div class="step"><b>通信功能检查</b><span class="wait">WAIT</span></div>
+        </div>
+      </article>
     </div>
   </section>
 
-  <section class="section" id="interfaces" aria-labelledby="interfaces-title">
-    <p class="section-kicker">实际产品界面</p>
-    <h2 id="interfaces-title">截图区预留给脱敏后的真实运行界面</h2>
-    <div class="screenshot-grid">
-      {interfaces.map(([name, text]) => (
-        <article class="screenshot-card">
-          <div class="screenshot-placeholder">
-            <span>{name}</span>
-            <small>待替换为脱敏真实截图</small>
-          </div>
-          <h3>{name}</h3>
-          <p>{text}</p>
-        </article>
-      ))}
+  <section class="section result-section" aria-labelledby="result-title">
+    <div class="section-head">
+      <div>
+        <p class="section-kicker">Result States</p>
+        <h2 id="result-title">结果必须直观：PASS 与 FAIL 都要能演示</h2>
+      </div>
+      <p>客户要一眼看懂结果、失败位置、失败原因，以及数据是否已经保存。</p>
+    </div>
+    <div class="grid two">
+      <article class="result-state pass-state">
+        <strong>PASS</strong>
+        <h3>测试通过</h3>
+        <p>全部步骤完成，测量值位于限制范围内，结果已写入本地记录并进入监听器流程。</p>
+        <span class="badge green">SN-DEMO-0422 · Completed</span>
+      </article>
+      <article class="result-state fail-state">
+        <strong>FAIL</strong>
+        <h3>测试失败</h3>
+        <p>失败步骤：静态电流检查；测量值超出上限。测试终止并记录失败详情。</p>
+        <span class="badge red">Current_Check · Upper Limit</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section tint engineer-section" aria-labelledby="engineer-title">
+    <div class="section-head">
+      <div>
+        <p class="section-kicker">Engineer Mode</p>
+        <h2 id="engineer-title">工程师视角：产品配置包驱动测试行为</h2>
+      </div>
+      <p>工程师维护资源、步骤、治具变量和监听策略，而不是为每个产品复制一套程序。</p>
+    </div>
+    <div class="tabs">
+      <span class="tab active">bench.yaml</span>
+      <span class="tab">test_plan.yaml</span>
+      <span class="tab">fixture_settings.yaml</span>
+      <span class="tab">listeners.yaml</span>
+    </div>
+    <div class="mock-grid">
+      <aside class="sidebar">
+        <h3>Product Bundle</h3>
+        <span class="side-item active">DEMO_FCT</span>
+        <span class="side-item">bench.yaml</span>
+        <span class="side-item">test_plan.yaml</span>
+        <span class="side-item">fixture_settings.yaml</span>
+        <span class="side-item">listeners.yaml</span>
+        <strong class="badge green">Config Validated</strong>
+      </aside>
+      <section class="editor">
+        <div class="editor-chrome"><span></span><span></span><span></span><strong>test_plan.yaml</strong></div>
+        <pre><code>profile: demo_fct
+resource_bindings:
+  dut: demo_dut
+  power: simulated_power
+
+steps:
+  - name: Voltage_Check
+    plugin: dmm_measure
+    limits:
+      lower: 4.8
+      upper: 5.2
+  - name: Current_Check
+    plugin: power_current
+    limits:
+      upper: 150mA</code></pre>
+      </section>
     </div>
   </section>
 
@@ -339,6 +422,7 @@ listeners:
     const tabButtons = document.querySelectorAll("[data-demo-tab]");
     const demoViews = document.querySelectorAll("[data-demo-view]");
     const runButton = document.querySelector("[data-demo-run]");
+    const secondaryRunButton = document.querySelector("[data-demo-run-secondary]");
     const resultText = document.querySelector("[data-demo-result]");
     const resultDesc = document.querySelector("[data-demo-desc]");
     const resultOrb = document.querySelector("[data-demo-orb]");
@@ -366,7 +450,7 @@ listeners:
       log.scrollTop = log.scrollHeight;
     };
 
-    runButton?.addEventListener("click", () => {
+    const runDemo = () => {
       const sn = snInput?.value || "SN-DEMO";
       const steps = [
         "[SCAN] Accepted synthetic SN " + sn,
@@ -398,6 +482,12 @@ listeners:
           }
         }, 460 * (index + 1));
       });
+    };
+
+    runButton?.addEventListener("click", runDemo);
+    secondaryRunButton?.addEventListener("click", () => {
+      document.querySelector("#interactive-demo")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      runDemo();
     });
   </script>
 </ProductLayout>
