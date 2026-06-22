@@ -77,6 +77,11 @@ assert.ok(
 
 const requiredHomeSections = [
   "Engineering Preview",
+  "TestPlatform Core",
+  "运行态",
+  "配置态",
+  "Trace Log",
+  "DEMO_FCT_BUNDLE.yaml",
   "客户痛点",
   "平台带来的结果",
   "实际产品界面",
@@ -157,6 +162,9 @@ for (const rule of [
   ".screenshot-placeholder",
   ".diagram",
   ".matrix-row",
+  ".demo-shell",
+  ".demo-switch",
+  ".trace-body",
   "border-radius: 24px",
   "radial-gradient",
   "backdrop-filter"

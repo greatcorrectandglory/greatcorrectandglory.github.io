@@ -82,6 +82,8 @@ const docs = [
   ["部署检查表", "/test-platform/docs/#operations"],
   ["版本记录", "/test-platform/changelog/"]
 ];
+
+const demoSteps = ["加载配置包", "初始化资源", "执行步骤插件", "Validation 判定", "Listener 记录"];
 ---
 
 <ProductLayout title={title} description={description} canonicalPath="/test-platform/">
@@ -93,27 +95,111 @@ const docs = [
         面向研发验证与产线测试，统一管理产品配置、硬件资源、测试步骤、判定规则、结果追溯及 MES / 云端上报。
       </p>
       <div class="hero-actions">
-        <a class="primary-action" href="#interfaces">查看产品界面</a>
+        <a class="primary-action" href="#interactive-demo">查看交互演示</a>
         <a class="secondary-action" href="/test-platform/architecture/">查看技术架构</a>
       </div>
       <dl class="status-row" aria-label="当前状态">
         <div><dt>当前版本</dt><dd>待确认</dd></div>
-        <div><dt>最后更新</dt><dd>2026-06-20</dd></div>
+        <div><dt>最后更新</dt><dd>2026-06-22</dd></div>
         <div><dt>交付入口</dt><dd>Windows GUI</dd></div>
       </dl>
     </div>
-    <div class="hero-panel" aria-label="产品界面截图占位">
-      <div class="panel-title">
-        <span>Product Runtime</span>
-        <strong>截图待替换</strong>
+    <div class="demo-shell" id="interactive-demo" aria-label="通用自动化测试平台交互演示">
+      <div class="demo-topbar">
+        <div class="demo-brand">
+          <span class="demo-mark" aria-hidden="true">T</span>
+          <strong>TestPlatform Core</strong>
+        </div>
+        <div class="demo-switch" role="tablist" aria-label="演示模式">
+          <button class="active" type="button" data-demo-tab="operator" role="tab" aria-selected="true">运行态</button>
+          <button type="button" data-demo-tab="engineer" role="tab" aria-selected="false">配置态</button>
+        </div>
       </div>
-      <div class="runtime-grid">
-        <span class="pass">PASS</span>
-        <span class="pass">PASS</span>
-        <span class="warning">RETRY</span>
-        <span class="pass">PASS</span>
+
+      <div class="demo-statusbar" aria-label="演示状态">
+        <span><i class="status-dot"></i>Runtime Ready</span>
+        <span><i class="status-dot"></i>Local DB OK</span>
+        <span><i class="status-dot muted"></i>MES 模拟输出</span>
       </div>
-      <p>此处仅为公开官网占位区。上线真实截图前需完成脱敏检查，不展示客户、产品型号、设备地址或协议字段。</p>
+
+      <div class="demo-view active" data-demo-view="operator">
+        <div class="demo-layout">
+          <aside class="demo-side-panel">
+            <p class="demo-label">设备准备就绪</p>
+            <label class="demo-field">
+              <span>等待扫描序列号</span>
+              <input id="demo-sn" type="text" value="SN-DEMO-0422" aria-label="演示序列号" />
+            </label>
+            <button class="demo-run-button" type="button" data-demo-run>开始测试</button>
+            <div class="bundle-card">
+              <span>当前 Bundle</span>
+              <strong>DEMO_FCT_BUNDLE.yaml</strong>
+              <small>公开模拟配置 · 无真实产品信息</small>
+            </div>
+          </aside>
+
+          <section class="demo-result-card" aria-live="polite">
+            <div class="result-orb" data-demo-orb>READY</div>
+            <h2 data-demo-result>等待测试开始</h2>
+            <p data-demo-desc>点击开始测试，演示 Runtime 如何加载配置、执行步骤、判定并记录结果。</p>
+            <div class="demo-progress" aria-label="测试进度">
+              <span data-demo-progress></span>
+            </div>
+            <ol class="demo-step-list">
+              {demoSteps.map((step) => <li>{step}</li>)}
+            </ol>
+          </section>
+        </div>
+
+        <div class="trace-panel">
+          <div class="trace-head">
+            <span>Trace Log</span>
+            <strong>Auto-scroll</strong>
+          </div>
+          <div class="trace-body" data-demo-log>
+            <p>[SYSTEM] Runtime ready. Waiting for product selection...</p>
+            <p>[CONFIG] Demo bundle loaded in preview mode.</p>
+            <p>[SAFETY] Public demo uses synthetic SN and anonymous resources.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-view" data-demo-view="engineer">
+        <div class="engineer-grid">
+          <aside class="bundle-list">
+            <p class="demo-label">Product Bundle</p>
+            <button class="active" type="button">bench.yaml</button>
+            <button type="button">test_plan.yaml</button>
+            <button type="button">fixture_settings.yaml</button>
+            <button type="button">listeners.yaml</button>
+          </aside>
+          <section class="config-editor">
+            <div class="editor-chrome">
+              <span></span><span></span><span></span>
+              <strong>test_plan.yaml · Preview</strong>
+            </div>
+            <pre><code>profile: demo_fct
+steps:
+  - id: voltage_check
+    plugin: measurement.step
+    resource: dmm_1
+    validation:
+      min: 4.8
+      max: 5.2
+listeners:
+  - local_result_db
+  - external_report_adapter</code></pre>
+          </section>
+          <aside class="plugin-map">
+            <p class="demo-label">Plugin Boundary</p>
+            <div><strong>Step Plugin</strong><span>测量 / 烧录 / 通信</span></div>
+            <div><strong>Resource Plugin</strong><span>DUT / 仪器 / 仿真</span></div>
+            <div><strong>Listener Plugin</strong><span>SQLite / MQTT / 外部系统</span></div>
+          </aside>
+        </div>
+      </div>
+
+      <p class="demo-note">交互演示为公开脱敏模拟，不连接真实设备、客户系统或内部协议。</p>
     </div>
   </section>
 
@@ -248,4 +334,70 @@ const docs = [
       <a class="secondary-action" href="/test-platform/architecture/">查看架构</a>
     </div>
   </section>
+
+  <script>
+    const tabButtons = document.querySelectorAll("[data-demo-tab]");
+    const demoViews = document.querySelectorAll("[data-demo-view]");
+    const runButton = document.querySelector("[data-demo-run]");
+    const resultText = document.querySelector("[data-demo-result]");
+    const resultDesc = document.querySelector("[data-demo-desc]");
+    const resultOrb = document.querySelector("[data-demo-orb]");
+    const progress = document.querySelector("[data-demo-progress]");
+    const log = document.querySelector("[data-demo-log]");
+    const snInput = document.querySelector("#demo-sn");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.demoTab;
+        tabButtons.forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle("active", selected);
+          item.setAttribute("aria-selected", String(selected));
+        });
+        demoViews.forEach((view) => view.classList.toggle("active", view.dataset.demoView === mode));
+      });
+    });
+
+    const addDemoLog = (message) => {
+      if (!log) return;
+      const line = document.createElement("p");
+      line.textContent = message;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    };
+
+    runButton?.addEventListener("click", () => {
+      const sn = snInput?.value || "SN-DEMO";
+      const steps = [
+        "[SCAN] Accepted synthetic SN " + sn,
+        "[CONFIG] Product Bundle validation passed.",
+        "[RESOURCE] Demo DUT and instrument resources initialized.",
+        "[STEP] measurement.step returned value within limits.",
+        "[VALIDATION] Rule evaluation completed: PASS.",
+        "[LISTENER] Local result saved; external report queued in demo mode."
+      ];
+
+      runButton.setAttribute("disabled", "true");
+      resultOrb.textContent = "RUN";
+      resultOrb.className = "result-orb running";
+      resultText.textContent = "测试执行中";
+      resultDesc.textContent = "Runtime 正在按测试计划执行步骤，并把结果交给 Validation 与 Listener。";
+      progress.style.width = "8%";
+      addDemoLog("[SYSTEM] Test sequence started.");
+
+      steps.forEach((step, index) => {
+        window.setTimeout(() => {
+          addDemoLog(step);
+          progress.style.width = `${Math.round(((index + 1) / steps.length) * 100)}%`;
+          if (index === steps.length - 1) {
+            resultOrb.textContent = "PASS";
+            resultOrb.className = "result-orb pass";
+            resultText.textContent = "PASS";
+            resultDesc.textContent = "模拟测试通过：结果已写入本地记录，外部系统输出保持项目级评估。";
+            runButton.removeAttribute("disabled");
+          }
+        }, 460 * (index + 1));
+      });
+    });
+  </script>
 </ProductLayout>
