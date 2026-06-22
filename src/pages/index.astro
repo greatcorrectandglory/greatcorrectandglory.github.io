@@ -53,23 +53,6 @@ const capabilities = [
   ["结果追溯与外部集成", "通过日志、SQLite、MQTT 或 Listener 对接外部系统，具体字段按项目评估。", "/test-platform/docs/#operations"]
 ];
 
-const roles = [
-  ["测试员", "选择产品、输入或扫描序列号、启动测试、查看 PASS/FAIL 和异常提示。"],
-  ["硬件工程师", "配置仪器、DUT、串口、USB、网络连接和治具参数，验证资源绑定。"],
-  ["软件工程师", "开发测试步骤插件、资源插件、监听器插件和外部系统集成。"]
-];
-
-const compatibility = [
-  ["操作系统", "Windows 支持完整 GUI 与后台运行；Linux 仅作为后台 Python 运行路径；macOS 当前不在范围内。"],
-  ["GUI 交付方式", "Windows + PyQt/PySide 桌面应用，面向本地工站使用。"],
-  ["后台运行方式", "Python 3.8+ 运行时，按产品配置包加载并执行测试计划。"],
-  ["产品配置格式", "YAML Product Bundle：bench、test_plan、fixture_settings、listeners。"],
-  ["支持的硬件通信类型", "串口、USB、仿真资源已有抽象；网络与专用设备根据具体硬件项目评估。"],
-  ["结果存储方式", "本地日志、SQLite 结果库和 Listener 输出；附件策略按项目评估。"],
-  ["外部集成方式", "MQTT、MES 或云端系统通过 Listener/API 对接，字段和认证方式按项目评估。"],
-  ["插件类型", "测试步骤插件、硬件资源插件、结果监听器插件。"]
-];
-
 const docs = [
   ["快速开始", "/test-platform/docs/#getting-started"],
   ["系统要求", "/test-platform/docs/#getting-started"],
@@ -104,7 +87,11 @@ const demoSteps = ["加载配置包", "初始化资源", "执行步骤插件", "
         <div><dt>交付入口</dt><dd>Windows GUI</dd></div>
       </dl>
     </div>
-    <div class="demo-shell" id="interactive-demo" aria-label="通用自动化测试平台交互演示">
+    <div class="demo-shell product-window" id="interactive-demo" aria-label="通用自动化测试平台交互演示">
+      <div class="window-bar">
+        <span></span><span></span><span></span>
+        <strong>Universal Test Platform · Runtime</strong>
+      </div>
       <div class="demo-topbar">
         <div class="demo-brand">
           <span class="demo-mark" aria-hidden="true">T</span>
@@ -118,49 +105,53 @@ const demoSteps = ["加载配置包", "初始化资源", "执行步骤插件", "
 
       <div class="demo-statusbar" aria-label="演示状态">
         <span><i class="status-dot"></i>Runtime Ready</span>
-        <span><i class="status-dot"></i>Local DB OK</span>
-        <span><i class="status-dot muted"></i>MES 模拟输出</span>
+        <span><i class="status-dot"></i>Product: DEMO_FCT</span>
+        <span><i class="status-dot muted"></i>Station 01</span>
       </div>
 
       <div class="demo-view active" data-demo-view="operator">
         <div class="demo-layout">
           <aside class="demo-side-panel">
-            <p class="demo-label">设备准备就绪</p>
+            <p class="demo-label">测试步骤</p>
             <label class="demo-field">
-              <span>等待扫描序列号</span>
+              <span>SN 输入</span>
               <input id="demo-sn" type="text" value="SN-DEMO-0422" aria-label="演示序列号" />
             </label>
             <button class="demo-run-button" type="button" data-demo-run>开始测试</button>
-            <div class="bundle-card">
-              <span>当前 Bundle</span>
-              <strong>DEMO_FCT_BUNDLE.yaml</strong>
-              <small>公开模拟配置 · 无真实产品信息</small>
-            </div>
+            <ol class="software-step-list">
+              {demoSteps.map((step, index) => <li class={index === 0 ? "active" : ""}><span>{String(index + 1).padStart(2, "0")}</span>{step}</li>)}
+            </ol>
           </aside>
 
           <section class="demo-result-card" aria-live="polite">
-            <div class="result-orb" data-demo-orb>READY</div>
-            <h2 data-demo-result>等待测试开始</h2>
+            <div class="result-head">
+              <div>
+                <span>当前状态</span>
+                <h2 data-demo-result>等待测试开始</h2>
+              </div>
+              <strong class="result-pill" data-demo-orb>READY</strong>
+            </div>
             <p data-demo-desc>点击开始测试，演示 Runtime 如何加载配置、执行步骤、判定并记录结果。</p>
+            <div class="measure-grid">
+              <div><span>Voltage</span><strong>5.01 V</strong></div>
+              <div><span>Current</span><strong>82 mA</strong></div>
+              <div><span>Limit</span><strong>4.8 - 5.2 V</strong></div>
+              <div><span>Record</span><strong>SQLite</strong></div>
+            </div>
             <div class="demo-progress" aria-label="测试进度">
               <span data-demo-progress></span>
             </div>
-            <ol class="demo-step-list">
-              {demoSteps.map((step) => <li>{step}</li>)}
-            </ol>
+            <div class="trace-panel compact">
+              <div class="trace-head">
+                <span>Trace Log</span>
+                <strong>Local</strong>
+              </div>
+              <div class="trace-body" data-demo-log>
+                <p>[SYSTEM] Runtime ready. Waiting for product selection...</p>
+                <p>[CONFIG] Demo bundle loaded in preview mode.</p>
+              </div>
+            </div>
           </section>
-        </div>
-
-        <div class="trace-panel">
-          <div class="trace-head">
-            <span>Trace Log</span>
-            <strong>Auto-scroll</strong>
-          </div>
-          <div class="trace-body" data-demo-log>
-            <p>[SYSTEM] Runtime ready. Waiting for product selection...</p>
-            <p>[CONFIG] Demo bundle loaded in preview mode.</p>
-            <p>[SAFETY] Public demo uses synthetic SN and anonymous resources.</p>
-          </div>
         </div>
       </div>
 
@@ -199,7 +190,7 @@ listeners:
         </div>
       </div>
 
-      <p class="demo-note">交互演示为公开脱敏模拟，不连接真实设备、客户系统或内部协议。</p>
+      <p class="demo-note">公开脱敏模拟，不连接真实设备、客户系统或内部协议。</p>
     </div>
   </section>
 
@@ -255,30 +246,6 @@ listeners:
     </div>
   </section>
 
-  <section class="section result-section" aria-labelledby="result-title">
-    <div class="section-head">
-      <div>
-        <p class="section-kicker">Result States</p>
-        <h2 id="result-title">结果必须直观：PASS 与 FAIL 都要能演示</h2>
-      </div>
-      <p>客户要一眼看懂结果、失败位置、失败原因，以及数据是否已经保存。</p>
-    </div>
-    <div class="grid two">
-      <article class="result-state pass-state">
-        <strong>PASS</strong>
-        <h3>测试通过</h3>
-        <p>全部步骤完成，测量值位于限制范围内，结果已写入本地记录并进入监听器流程。</p>
-        <span class="badge green">SN-DEMO-0422 · Completed</span>
-      </article>
-      <article class="result-state fail-state">
-        <strong>FAIL</strong>
-        <h3>测试失败</h3>
-        <p>失败步骤：静态电流检查；测量值超出上限。测试终止并记录失败详情。</p>
-        <span class="badge red">Current_Check · Upper Limit</span>
-      </article>
-    </div>
-  </section>
-
   <section class="section tint engineer-section" aria-labelledby="engineer-title">
     <div class="section-head">
       <div>
@@ -324,24 +291,6 @@ steps:
     </div>
   </section>
 
-  <section class="section dark" aria-labelledby="flow-title">
-    <p class="section-kicker">测试执行流程</p>
-    <h2 id="flow-title">客户先理解平台如何工作，再深入查看架构细节</h2>
-    <ol class="flow-list">
-      {flow.map((item) => <li>{item}</li>)}
-    </ol>
-  </section>
-
-  <section class="section" aria-labelledby="scenario-title">
-    <p class="section-kicker">典型应用场景</p>
-    <h2 id="scenario-title">从研发验证到产线测试，优先覆盖可确认的通用场景</h2>
-    <div class="scenario-preview">
-      <a class="scenario-row" href="/test-platform/scenarios/"><strong>研发阶段功能验证</strong><span>样机测试、参数验证、日志留存</span></a>
-      <a class="scenario-row" href="/test-platform/scenarios/"><strong>电子产品产线测试</strong><span>工站执行、资源绑定、结果追溯</span></a>
-      <a class="scenario-row" href="/test-platform/scenarios/"><strong>MES 或云端系统对接</strong><span>通过 Listener/API 按项目评估接入</span></a>
-    </div>
-  </section>
-
   <section class="section tint" id="capabilities" aria-labelledby="capability-title">
     <p class="section-kicker">核心能力清单</p>
     <h2 id="capability-title">围绕通用测试平台、自动化测试平台和产线测试软件的六类能力</h2>
@@ -356,30 +305,22 @@ steps:
     </div>
   </section>
 
-  <section class="section" aria-labelledby="roles-title">
-    <p class="section-kicker">三类用户入口</p>
-    <h2 id="roles-title">不同角色使用同一平台，但接触不同操作深度</h2>
-    <div class="grid three">
-      {roles.map(([role, text]) => (
-        <article class="card role-card">
-          <p class="role-label">{role}</p>
-          <p>{text}</p>
-        </article>
-      ))}
+  <section class="section" aria-labelledby="scenario-title">
+    <p class="section-kicker">典型应用场景</p>
+    <h2 id="scenario-title">从研发验证到产线测试，优先覆盖可确认的通用场景</h2>
+    <div class="scenario-preview">
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>研发阶段功能验证</strong><span>样机测试、参数验证、日志留存</span></a>
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>电子产品产线测试</strong><span>工站执行、资源绑定、结果追溯</span></a>
+      <a class="scenario-row" href="/test-platform/scenarios/"><strong>MES 或云端系统对接</strong><span>通过 Listener/API 按项目评估接入</span></a>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="compat-title">
-    <p class="section-kicker">兼容性与交付边界</p>
-    <h2 id="compat-title">公开页面只展示已确认范围，未确认能力按项目评估</h2>
-    <div class="matrix" role="table" aria-label="兼容性矩阵">
-      {compatibility.map(([name, value]) => (
-        <div class="matrix-row" role="row">
-          <strong role="cell">{name}</strong>
-          <span role="cell">{value}</span>
-        </div>
-      ))}
-    </div>
+  <section class="section dark" aria-labelledby="flow-title">
+    <p class="section-kicker">技术架构摘要</p>
+    <h2 id="flow-title">客户先理解平台如何工作，再深入查看架构细节</h2>
+    <ol class="flow-list">
+      {flow.map((item) => <li>{item}</li>)}
+    </ol>
   </section>
 
   <section class="section tint" aria-labelledby="docs-title">
@@ -388,23 +329,6 @@ steps:
     <div class="doc-links">
       {docs.map(([label, href]) => <a href={href}>{label}</a>)}
     </div>
-  </section>
-
-  <section class="section faq" aria-labelledby="faq-title">
-    <p class="section-kicker">FAQ</p>
-    <h2 id="faq-title">常见问题</h2>
-    <details>
-      <summary>这是开源框架还是企业测试软件？</summary>
-      <p>这是面向企业内部研发验证与产线测试的通用自动化测试平台。官网只公开产品能力和评估信息，不公开私有源码或客户资料。</p>
-    </details>
-    <details>
-      <summary>是否承诺零代码或完全无开发接入？</summary>
-      <p>不做此类承诺。平台优先通过配置包复用能力；当硬件、步骤或外部系统存在差异时，仍需要插件或集成开发。</p>
-    </details>
-    <details>
-      <summary>是否已经内置所有 MES 或云平台协议？</summary>
-      <p>不这样表述。平台提供结果监听和外部集成边界，具体系统字段、认证方式和网络环境需要按项目确认。</p>
-    </details>
   </section>
 
   <section class="section contact" id="contact" aria-labelledby="contact-title">
@@ -463,7 +387,7 @@ steps:
 
       runButton.setAttribute("disabled", "true");
       resultOrb.textContent = "RUN";
-      resultOrb.className = "result-orb running";
+      resultOrb.className = "result-pill running";
       resultText.textContent = "测试执行中";
       resultDesc.textContent = "Runtime 正在按测试计划执行步骤，并把结果交给 Validation 与 Listener。";
       progress.style.width = "8%";
@@ -475,7 +399,7 @@ steps:
           progress.style.width = `${Math.round(((index + 1) / steps.length) * 100)}%`;
           if (index === steps.length - 1) {
             resultOrb.textContent = "PASS";
-            resultOrb.className = "result-orb pass";
+            resultOrb.className = "result-pill pass";
             resultText.textContent = "PASS";
             resultDesc.textContent = "模拟测试通过：结果已写入本地记录，外部系统输出保持项目级评估。";
             runButton.removeAttribute("disabled");

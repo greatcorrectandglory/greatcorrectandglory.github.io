@@ -53,9 +53,15 @@ const navItems = [
         <span class="brand-mark" aria-hidden="true">T</span>
         <span>通用自动化测试平台</span>
       </a>
-      <nav aria-label="页面导航">
+      <nav class="desktop-nav" aria-label="页面导航">
         {navItems.map(([label, href]) => <a href={href}>{label}</a>)}
       </nav>
+      <details class="mobile-nav">
+        <summary>菜单</summary>
+        <nav aria-label="移动端页面导航">
+          {navItems.map(([label, href]) => <a href={href}>{label}</a>)}
+        </nav>
+      </details>
     </header>
 
     <main>
